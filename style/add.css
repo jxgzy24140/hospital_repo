@@ -6,7 +6,8 @@
 
 .container {
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
+  height: 100%;
   display: flex;
 }
 
@@ -98,12 +99,12 @@
 }
 #patientInputFrom #genderLabel {
   width: 75px;
+}
+
+.hide {
+  display: none;
+}
+
+.show {
+  display: block;
 }/*# sourceMappingURL=add.css.map */
-
-  .hide {
-    display: none;
-  }
-
-  .show {
-    display: block;
-  }

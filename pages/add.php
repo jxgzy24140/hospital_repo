@@ -7,53 +7,59 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Document</title>
   <link rel="stylesheet" href="../style/add.css" />
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
 <body>
   <?php
   require_once '../connection/connection.php';
-  $nurseOptions = mysqli_query($conn,"SELECT * FROM employee WHERE jobType=1");
+  $nurseOptions = mysqli_query($conn, "SELECT * FROM employee WHERE jobType=1");
+  $medications = mysqli_query($conn, "SELECT * FROM medication");
+  $medArr = ["Paracetamod", "Corticoit"];
   if (isset($_POST['add'])) {
-    $outPatient = (isset($_GET['outPatient']) ? $_GET['outPatient']: '');
-    $inPatient = (isset($_GET['outPatient']) ? $_GET['inPatient']: '');
+    $outPatient = (isset($_GET['outPatient']) ? $_GET['outPatient'] : '');
+    $inPatient = (isset($_GET['outPatient']) ? $_GET['inPatient'] : '');
     $firstName = $_POST['firstName'];
     $lastName = $_POST['lastName'];
     $dOb = $_POST['dOb'];
     $gender = $_POST['gender'];
     $address = $_POST['address'];
     $phone = $_POST['phone'];
-    if(!empty($outPatient)) {
-      $examDate = $_GET['examDate'];
-      $diagnosis = $_GET['diagnosis'];
-      $nextExamDate = $_GET['nextExamDate'];
-      $medications = $_GET['medications'];
-      $fee = $_GET['fee'];
-      $query = "INSERT INTO patients(fName,lName,dOb,gender,address,phone)
+    // if(!empty($outPatient)) {
+    // $examDate = $_GET['examDate'];
+    // $diagnosis = $_GET['diagnosis'];
+    // $nextExamDate = $_GET['nextExamDate'];
+    // $medications = $_GET['medications'];
+    // $fee = $_GET['fee'];
+    $query = "INSERT INTO patients(fName,lName,dOb,gender,address,phone)
       VALUES('$firstName','$lastName','$dOb','$gender','$address','$phone')";
-      $result = mysqli_query($conn, $query);
-      $outPatientQuery = "INSERT INTO examination() VALUES('$examDate','$diagnosis','$nextExamDate','$medications','$fee')";
-      $result2 = mysqli_query($conn, $outPatientQuery);
-    }
-    if(!empty($inPatient)) {
-      $dateAdmission = $_GET['dateAdmission'];
-      $fee = $_GET['fee'];
-      $treatingDoctor = $_GET['treatingDoctor'];
-      $caringNurse = $_GET['caringNurse'];
-      $diagnosis = $_GET['diagnosis'];
-      $sickRoom = $_GET['sickRoom'];
-      $dateOfCharge = $_GET['dateOfCharge'];
-      $fee = $_GET['fee'];
-
-    }
-
-
-    $result2 = mysqli_query($conn, "SELECT * FROM patients");
-    // if ($result)
-    //   echo "<script>alert('Thêm thành công!'); window.location = 'add.php' </script>";
-    // else
-    //   echo "<script>alert('Thêm thất bại'); window.location='add.php'</script>";
+    $result = mysqli_query($conn, $query);
+    // $outPatientQuery = "INSERT INTO examination() VALUES('$examDate','$diagnosis','$nextExamDate','$medications','$fee')";
+    // $result2 = mysqli_query($conn, $outPatientQuery);
+    // if($result) {
+    echo "<script>window.location='treatment.php'</script>";
   }
+  // }
+  // if(!empty($inPatient)) {
+  //   $dateAdmission = $_GET['dateAdmission'];
+  //   $fee = $_GET['fee'];
+  //   $treatingDoctor = $_GET['treatingDoctor'];
+  //   $caringNurse = $_GET['caringNurse'];
+  //   $diagnosis = $_GET['diagnosis'];
+  //   $sickRoom = $_GET['sickRoom'];
+  //   $dateOfCharge = $_GET['dateOfCharge'];
+  //   $fee = $_GET['fee'];
+
+  // }
+
+
+  // $result2 = mysqli_query($conn, "SELECT * FROM patients");
+  // if ($result)
+  //   echo "<script>alert('Thêm thành công!'); window.location = 'add.php' </script>";
+  // else
+  //   echo "<script>alert('Thêm thất bại'); window.location='add.php'</script>";
+  // }
   ?>
   <div class="container">
     <div class="left__container">
@@ -88,7 +94,6 @@
         </form>
       </div>
       <form method="POST" action="" id="patientInputFrom" enctype="multipart/form-data">
-
         <div class="name-group">
           <div class="form-group">
             <label for="fFame">First name</label>
@@ -118,23 +123,17 @@
           <label for="address">Address</label>
           <input name="address" type="text" class="form-control" id="address" placeholder="Address" required />
         </div>
-
         <div class="form-group">
           <label for="address">Type patient</label>
-          <!-- <select name="typePatient" id="">
-            <option onchange="selectFormInput(0)" value="OP">Out Patient</option>
-            <option onchange="selectFormInput(1)" value="IP">In Patient</option>
-          </select> -->
           OutPatient
-          <input name="outPatient" onchange="selectFormInput(0)" type="radio" class="typePatient" value="OP">
+          <input name="Patient" onchange="selectFormInput(0)" type="radio" class="typePatient" value="OP" checked>
           Inpatient
-          <input name="inPatient" onchange="selectFormInput(1)" type="radio" class="typePatient" value="IP">
+          <input name="Patient" onchange="selectFormInput(1)" type="radio" class="typePatient" value="IP">
         </div>
-        
-        <div class="out-patient-form hide" >
+        <div class="out-patient-form show">
           <div class="form-group">
-            <label for="address">Examination Date</label>
-            <input name="examDate" type="text" class="form-control" id="examDate" placeholder="Examination Date" />
+            <label for="examDate">Examination Date</label>
+            <input type="date" class="form-control" id="examDate">
           </div>
           <div class="form-group">
             <label for="address">Diagnosis</label>
@@ -145,8 +144,13 @@
             <input name="nextExamDate" type="date" class="form-control" id="nextExamDate" placeholder="The Next Exam Date" />
           </div>
           <div class="form-group">
-            <label for="address">Medications</label>
-            <input name="medications" type="text" class="form-control" id="medications" placeholder="Medications" />
+            <label for="medications">Medications</label>
+            <select name="medications[]" class="form-group js-example-basic-multiple" multiple="multiple">
+              <?php while ($row = mysqli_fetch_array($medications)) : { ?>
+                  <option value="<?php echo $row['medication_Id'] ?>"><?php echo $row['nameMedication'] ?></option>
+              <?php }
+              endwhile ?>
+            </select>
           </div>
           <div class="form-group">
             <label for="address">Fee</label>
@@ -162,19 +166,20 @@
             <label for="address">Treatment</label>
             <input name="address" type="text" class="form-control" id="treatment" placeholder="" />
           </div> -->
-          <div class="form-group">
+          <!-- <div class="form-group">
             <label for="address">Treating doctors</label>
             <input name="treatingDoctor" type="date" class="form-control" id="treatingDoctors" placeholder="Treating Doctor" />
-          </div>
-          <div class="form-group">
+          </div> -->
+          <!-- <div class="form-group">
             <label for="address">Caring nurse</label>
             <select name="caringNurse" id="">
-              <?php while($row = mysqli_fetch_row($nurseOptions)): ?>
-              <option value="<?php echo $row['employee_Id'] ?>"><?php echo $row['fName']; echo $row['lName'] ?></option>
+              <?php while ($row = mysqli_fetch_row($nurseOptions)) : ?>
+              <option value="<?php echo $row['employee_Id'] ?>"><?php echo $row['fName'];
+                                                                echo $row['lName'] ?></option>
               <?php endwhile ?>
             </select>
-            <!-- <input name="address" type="text" class="form-control" id="caringNurse" placeholder="Caring Nurse" /> -->
-          </div>
+            <input name="address" type="text" class="form-control" id="caringNurse" placeholder="Caring Nurse" /> -->
+          <!-- </div> -->
           <div class="form-group">
             <label for="diagnosis">Diagnosis</label>
             <input name="diagnosis" type="text" class="form-control" id="diagnosis" placeholder="Diagnonsis" />
@@ -192,13 +197,19 @@
             <input name="fee" type="text" class="form-control" id="fee" placeholder="Fee" />
           </div>
         </div>
-         <!-- onclick="return confirm('Are you comfirm this information?')" -->
         <button name="add" type="submit" class="btn btn-primary">Submit</button>
       </form>
-     
+
     </div>
   </div>
+  <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
   <script src="index.js"></script>
+  <script>
+    $(document).ready(function() {
+      $('.js-example-basic-multiple').select2();
+    });
+  </script>
 </body>
 
 </html>
