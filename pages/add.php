@@ -93,7 +93,7 @@
           </button>
         </form>
       </div>
-      <form method="POST" action="" id="patientInputFrom" enctype="multipart/form-data">
+      <form method="POST" action="" id="patientInputForm" enctype="multipart/form-data">
         <div class="name-group">
           <div class="form-group">
             <label for="fFame">First name</label>
@@ -159,8 +159,8 @@
         </div>
         <div class="in-patient-form hide">
           <div class="form-group">
-            <label for="address">Date admission</label>
-            <input name="dateAdmission" type="text" class="form-control" id="dateAdmission" placeholder="Date admission" />
+            <label for="dateAdmission">Date admission</label>
+            <input name="dateAdmission" type="date" class="form-control" id="dateAdmission" placeholder="Date admission" />
           </div>
           <!-- <div class="form-group">
             <label for="address">Treatment</label>

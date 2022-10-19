@@ -77,27 +77,27 @@
   cursor: pointer;
 }
 
-#patientInputFrom {
+#patientInputForm {
   padding: 10px;
 }
-#patientInputFrom .name-group {
+#patientInputForm .name-group {
   display: flex;
 }
-#patientInputFrom .form-group {
+#patientInputForm .form-group {
   padding: 20px 10px;
   display: flex;
   align-items: center;
 }
-#patientInputFrom label {
+#patientInputForm label {
   display: inline-block;
   width: 100px;
   font-size: 16px;
   font-weight: bold;
 }
-#patientInputFrom #maleGender {
+#patientInputForm #maleGender {
   margin-right: 25px;
 }
-#patientInputFrom #genderLabel {
+#patientInputForm #genderLabel {
   width: 75px;
 }
 
@@ -107,4 +107,9 @@
 
 .show {
   display: block;
+}
+
+input {
+  border: 1px solid #aaa;
+  border-radius: 4px;
 }/*# sourceMappingURL=add.css.map */

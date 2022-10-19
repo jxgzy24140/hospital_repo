@@ -86,7 +86,7 @@
     }
   }
   
-  #patientInputFrom {
+  #patientInputForm {
     padding: 10px;
 
     .name-group {
@@ -121,4 +121,9 @@
   }
   .show {
     display: block;
+  }
+
+  input {
+    border: 1px solid #aaa;
+    border-radius: 4px;
   }
