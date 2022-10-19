@@ -18,27 +18,28 @@
   $medications = mysqli_query($conn, "SELECT * FROM medication");
   $medArr = ["Paracetamod", "Corticoit"];
   if (isset($_POST['add'])) {
-    $outPatient = (isset($_GET['outPatient']) ? $_GET['outPatient'] : '');
-    $inPatient = (isset($_GET['outPatient']) ? $_GET['inPatient'] : '');
+    $outPatient = (isset($_POST['outPatient']) ? $_POST['outPatient'] : '');
+    $inPatient = (isset($_POST['inPatient']) ? $_POST['inPatient'] : '');
     $firstName = $_POST['firstName'];
     $lastName = $_POST['lastName'];
     $dOb = $_POST['dOb'];
     $gender = $_POST['gender'];
     $address = $_POST['address'];
     $phone = $_POST['phone'];
-    // if(!empty($outPatient)) {
-    // $examDate = $_GET['examDate'];
-    // $diagnosis = $_GET['diagnosis'];
-    // $nextExamDate = $_GET['nextExamDate'];
-    // $medications = $_GET['medications'];
-    // $fee = $_GET['fee'];
-    $query = "INSERT INTO patients(fName,lName,dOb,gender,address,phone)
+    if (!empty($outPatient)) {
+      $examDate = $_GET['examDate'];
+      $diagnosis = $_GET['diagnosis'];
+      $nextExamDate = $_GET['nextExamDate'];
+      $medications = $_GET['medications'];
+      $fee = $_GET['fee'];
+      $query = "INSERT INTO patients(fName,lName,dOb,gender,address,phone)
       VALUES('$firstName','$lastName','$dOb','$gender','$address','$phone')";
-    $result = mysqli_query($conn, $query);
-    // $outPatientQuery = "INSERT INTO examination() VALUES('$examDate','$diagnosis','$nextExamDate','$medications','$fee')";
-    // $result2 = mysqli_query($conn, $outPatientQuery);
-    // if($result) {
-    echo "<script>window.location='treatment.php'</script>";
+      $result = mysqli_query($conn, $query);
+      // $outPatientQuery = "INSERT INTO examination() VALUES('$examDate','$diagnosis','$nextExamDate','$medications','$fee')";
+      // $result2 = mysqli_query($conn, $outPatientQuery);
+      // if($result) {
+      echo "<script>window.location='treatment.php'</script>";
+    }
   }
   // }
   // if(!empty($inPatient)) {
@@ -126,9 +127,9 @@
         <div class="form-group">
           <label for="address">Type patient</label>
           OutPatient
-          <input name="Patient" onchange="selectFormInput(0)" type="radio" class="typePatient" value="OP" checked>
+          <input name="outPatient" onchange="selectFormInput(0)" type="radio" class="typePatient" value="OP" checked>
           Inpatient
-          <input name="Patient" onchange="selectFormInput(1)" type="radio" class="typePatient" value="IP">
+          <input name="inPatient" onchange="selectFormInput(1)" type="radio" class="typePatient" value="IP">
         </div>
         <div class="out-patient-form show">
           <div class="form-group">
@@ -208,6 +209,17 @@
   <script>
     $(document).ready(function() {
       $('.js-example-basic-multiple').select2();
+    });
+    $(document).ready(function() {
+      $("input[type=radio]").prop("checked", false);
+      $("input[type=radio]:first").prop("checked", true);
+
+      $("input[type=radio]").click(function(event) {
+        $("input[type=radio]").prop("checked", false);
+        $(this).prop("checked", true);
+
+        //event.preventDefault();
+      });
     });
   </script>
 </body>
