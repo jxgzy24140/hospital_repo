@@ -21,9 +21,6 @@
       $result = mysqli_query($conn, "SELECT * FROM patients WHERE phone LIKE '%$search_value%' OR lName LIKE '%$search_value%'
     OR fName LIKE '%$search_value%' OR lName LIKE '%$search_value%' OR patient_Id LIKE '%$search_value%'");
     }
-  } else {
-    $result = mysqli_query($conn, "SELECT * FROM patients limit 1");
-    $result = '';
   }
   ?>
   <div class="container">
@@ -32,7 +29,7 @@
         <h1 class="left__title">Hospital Management</h1>
         <ul class="lc__options">
           <span>
-            <li><i class="fa-regular fa-address-book"></i><a href="./pages/add.php">Add new patient</a></li>
+            <li><i class="fa-regular fa-address-book"></i><a href="./action/add.php">Add new patient</a></li>
           </span>
           <span>
             <li><i class="fa-solid fa-list"></i><a href="./pages/patients.php">List all patient are treated by a doctor</a></li>
@@ -75,12 +72,12 @@
               <td><?php if($temp['gender']==0) echo "Male"; else echo "Female"; ?></td>
               <td><?php echo $temp['address']; ?></td>
               <td><?php echo $temp['phone']; ?></td>
-              <td><a href="./pages/treatment.php?id=<?php echo $temp['patient_Id'] ?>"><i class="fa-thin fa-circle-info"></i></a></td>
+              <td><a href="./pages/detail.php?id=<?php echo $temp['patient_Id'] ?>"><i class="fa-thin fa-circle-info"></i></a></td>
           </tr>
-        <?php endwhile; } ?>
+        <?php endwhile; }?>
         </tbody>
       </table>
-      <?php } ?>
+      <?php }?> 
     </div>
   </div>
 </body>

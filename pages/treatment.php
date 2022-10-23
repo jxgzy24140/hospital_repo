@@ -14,9 +14,9 @@
 <body>
   <?php
   require_once '../connection/connection.php';
-  $medication = mysqli_query($conn,"SELECT * FROM medication");
-  $doctors = mysqli_query($conn,"SELECT * FROM employee WHERE jobType='0'");
-  $nurses = mysqli_query($conn,"SELECT * FROM employee WHERE jobType='1'");
+  $medication = mysqli_query($conn, "SELECT * FROM medication");
+  $doctors = mysqli_query($conn, "SELECT * FROM employee WHERE jobType='0'");
+  $nurses = mysqli_query($conn, "SELECT * FROM employee WHERE jobType='1'");
   ?>
   <div class="container">
     <div class="left__container">
@@ -54,17 +54,19 @@
         <div class="form-group">
           <label for="dateOfBirth">Doctors</label>
           <select name="medications[]" class="js-example-basic-multiple" multiple="multiple">
-            <?php while($row1 = mysqli_fetch_array($doctors)) : ?>
-              <option value="<?php $row1['employee_Id'] ?>"><?php echo $row1['fName']?></option>
-            <?php endwhile ?> 
-          </select>        </div>
+            <?php while ($row1 = mysqli_fetch_array($doctors)) : ?>
+              <option value="<?php $row1['employee_Id'] ?>"><?php echo $row1['fName'] ?></option>
+            <?php endwhile ?>
+          </select>
+        </div>
         <div class="form-group">
           <label for="dateOfBirth">Nurse</label>
           <select name="medications">
-            <?php while($row2 = mysqli_fetch_array($nurses)) : ?>
-              <option value="<?php $row2['employee_Id'] ?>"><?php echo $row2['fName']?></option>
-            <?php endwhile ?> 
-          </select>        </div>
+            <?php while ($row2 = mysqli_fetch_array($nurses)) : ?>
+              <option value="<?php $row2['employee_Id'] ?>"><?php echo $row2['fName'] ?></option>
+            <?php endwhile ?>
+          </select>
+        </div>
         <div class="form-group">
           <label for="dateOfBirth">Start Date</label>
           <input name="dOb" type="date" class="form-control" id="dateOfBirth" placeholder="" required />
@@ -72,22 +74,22 @@
         <div class="form-group">
           <label for="dateOfBirth">End Date</label>
           <input name="dOb" type="date" class="form-control" id="dateOfBirth" placeholder="" required />
-        </div> 
+        </div>
         <div class="form-group">
           <label for="medications">Medications</label>
           <select name="medications" class="js-example-basic-multiple" multiple="multiple">
-            <?php while($row = mysqli_fetch_array($medication)) : ?>
+            <?php while ($row = mysqli_fetch_array($medication)) : ?>
               <option value="<?php $row['medication_Id'] ?>"><?php echo $row['nameMedication'] ?></option>
-            <?php endwhile ?> 
+            <?php endwhile ?>
           </select>
         </div>
         <div class="form-group">
           <label for="Result">Result</label>
           <input name="Result" type="text" class="form-control" id="Result" placeholder="" />
-        </div> 
+        </div>
         <button name="add" type="submit" class="btn btn-primary">Submit</button>
       </form>
-     
+
     </div>
   </div>
   <script src="index.js"></script>

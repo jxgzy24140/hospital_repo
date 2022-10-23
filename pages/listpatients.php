@@ -13,9 +13,9 @@
 <body>
   <?php
   require_once '../connection/connection.php';
-  if (isset($_GET['id'])) {
-   $id = $_GET['id'];
-   $query = "SELECT * FROM treatment WHERE patient_Id = $id";
+  if (isset($_GET['timkiem'])) {
+   $doctor_Id = $_GET['doctor_Id'];
+   $query = "SELECT * FROM inpatient WHERE employee_Id = '$doctor_Id'";
    $result = mysqli_query($conn,$query);
   }
   ?>
@@ -26,7 +26,7 @@
         <ul class="lc__options">
           <span>
             <li>
-              <i class="fa-regular fa-address-book"></i><a href="">Add new patient</a>
+              <i class="fa-regular fa-address-book"></i><a href="../action/add.php">Add new patient</a>
             </li>
           </span>
           <span>
@@ -56,11 +56,11 @@
         <thead>
           <tr>
             <th scope="col">Patient ID</th>
-            <th scope="col">Doctor ID</th>
-            <th scope="col">Medication ID</th>
-            <th scope="col">Start Date</th>
-            <th scope="col">End Date</th>
-            <th scope="col">Period</th>
+            <th scope="col">Date Admission</th>
+            <th scope="col">Treating Doctors</th>
+            <th scope="col">Caring Nurse</th>
+            <th scope="col">SickRoom</th>
+            <th scope="col">Diagnosis</th>
           </tr>
         </thead>
         <tbody>
@@ -68,7 +68,7 @@
             <?php if(!empty($result)) { while ($temp = mysqli_fetch_array($result)) : ?>
               <td><?php echo $temp['patient_Id']; ?></td>
               <td><?php echo $temp['dateAdmission']; ?></td>
-              <td><?php echo $temp['treatingDotocs']; ?></td>
+              <td><?php echo $temp['treatingDoctors']; ?></td>
               <td><?php echo $temp['caringNurse']; ?></td>
               <td><?php echo $temp['sickRoom']; ?></td>
               <td><?php echo $temp['diagnosis']; ?></td>

@@ -112,4 +112,14 @@
 input {
   border: 1px solid #aaa;
   border-radius: 4px;
+  padding: 6px 2px;
+}
+
+input:focus-visible {
+  outline: none;
+  border: 1px solid rgba(0, 153, 255, 0.849);
+}
+
+.select2 {
+  min-width: 10%;
 }/*# sourceMappingURL=add.css.map */

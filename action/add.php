@@ -14,53 +14,69 @@
 <body>
   <?php
   require_once '../connection/connection.php';
-  $nurseOptions = mysqli_query($conn, "SELECT * FROM employee WHERE jobType=1");
+  $nurseOptions = mysqli_query($conn, "SELECT * FROM employee WHERE jobType='1'");
+  $doctors = mysqli_query($conn, "SELECT * FROM employee WHERE jobType='0'");
+  $inDoctors = mysqli_query($conn, "SELECT * FROM employee WHERE jobType='0'");
   $medications = mysqli_query($conn, "SELECT * FROM medication");
-  $medArr = ["Paracetamod", "Corticoit"];
   if (isset($_POST['add'])) {
     $outPatient = (isset($_POST['outPatient']) ? $_POST['outPatient'] : '');
     $inPatient = (isset($_POST['inPatient']) ? $_POST['inPatient'] : '');
-    $firstName = $_POST['firstName'];
-    $lastName = $_POST['lastName'];
-    $dOb = $_POST['dOb'];
+    $firstName = (isset($_POST['firstName']) ? $_POST['firstName'] : '');
+    $lastName = (isset($_POST['lastName']) ? $_POST['lastName'] : '');
+    $dOb = (isset($_POST['dOb']) ? $_POST['dOb'] : '');
     $gender = $_POST['gender'];
-    $address = $_POST['address'];
-    $phone = $_POST['phone'];
+    $address = (isset($_POST['address']) ? $_POST['address'] : '');
+    $phone = (isset($_POST['phone']) ? $_POST['phone'] : '');
+    $rowSQL = mysqli_query($conn, "SELECT MAX( patient_Id ) AS max FROM patients");
+    $row = mysqli_fetch_array($rowSQL);
+    $patient_Id = $row['max'] + 1;
+    $query = "INSERT INTO patients(patient_Id,fName,lName,dOb,gender,address,phone)
+    VALUES('$patient_Id','$firstName','$lastName','$dOb','$gender','$address','$phone')";
+    $result = mysqli_query($conn, $query);
     if (!empty($outPatient)) {
-      $examDate = $_GET['examDate'];
-      $diagnosis = $_GET['diagnosis'];
-      $nextExamDate = $_GET['nextExamDate'];
-      $medications = $_GET['medications'];
-      $fee = $_GET['fee'];
-      $query = "INSERT INTO patients(fName,lName,dOb,gender,address,phone)
-      VALUES('$firstName','$lastName','$dOb','$gender','$address','$phone')";
-      $result = mysqli_query($conn, $query);
-      // $outPatientQuery = "INSERT INTO examination() VALUES('$examDate','$diagnosis','$nextExamDate','$medications','$fee')";
-      // $result2 = mysqli_query($conn, $outPatientQuery);
-      // if($result) {
-      echo "<script>window.location='treatment.php'</script>";
+      $examDate = (isset($_POST['examDate']) ? $_POST['examDate'] : '');
+      $doctorId = (isset($_POST['doctor']) ? $_POST['doctor'] : '');
+      $diagnosis = (isset($_POST['diagnosis']) ? $_POST['diagnosis'] : '');
+      $nextExamDate = (isset($_POST['nextExamDate']) ? $_POST['nextExamDate'] : '');
+      $med_Id = (isset($_POST['medications']) ? $_POST['medications'] : '');
+      $fee = (isset($_POST['fee']) ? $_POST['fee'] : '');
+      if (!empty($med_Id)) {
+        if (!empty($nextExamDate)) {
+          foreach ($med_Id as $med) {
+            $outPatientQuery = "INSERT INTO examination(patient_Id,employee_Id,medication_Id,examDate,diagnosis,nextExamDate,fee) 
+          VALUES('$patient_Id','$doctorId','$med','$examDate','$diagnosis','$nextExamDate', '$fee')";
+            $result2 = mysqli_query($conn, $outPatientQuery);
+          }
+        } else {
+          foreach ($med_Id as $med) {
+            $outPatientQuery = "INSERT INTO examination(patient_Id,employee_Id,medication_Id,examDate,diagnosis,fee) 
+          VALUES('$patient_Id','$doctorId','$med','$examDate','$diagnosis', '$fee')";
+            $result2 = mysqli_query($conn, $outPatientQuery);
+          }
+        }
+      }
+      $outPatientRun = mysqli_query($conn,"INSERT INTO outpatient(patient_Id) VALUES ('$patient_Id')");
+    }
+    if (!empty($inPatient)) {
+      $dateAdmission = $_POST['dateAdmission'];
+      $treatingDoctor = $_POST['inDoctor'];
+      $nurseId = $_POST['inNurse'];
+      $diagnosis = $_POST['diagnosis'];
+      $sickRoom = $_POST['sickRoom'];
+      $dateOfCharge = $_POST['dateOfCharge'];
+      $fee = $_POST['fee'];
+      foreach($treatingDoctor as $doc) {
+        $docById = mysqli_query($conn,"SELECT * FROM employee WHERE employee_Id = '$doc'");
+        $docRow = mysqli_fetch_array($docById);
+        $fName = $docRow['fName'];
+        $lName = $docRow['lName'];
+        $docName = "{$fName} {$lName}";
+        $inPatientQuery = "INSERT INTO inpatient(patient_Id,dateAdmission,treatingDoctors,caringNurse,sickRoom,diagnosis,dateDischarge,fee, employee_Id) 
+        VALUES('$patient_Id','$dateAdmission','$docName','$nurseId','$sickRoom','$diagnosis','$dateOfCharge','$fee','$doc')";
+          $result2 = mysqli_query($conn, $inPatientQuery);
+      }
     }
   }
-  // }
-  // if(!empty($inPatient)) {
-  //   $dateAdmission = $_GET['dateAdmission'];
-  //   $fee = $_GET['fee'];
-  //   $treatingDoctor = $_GET['treatingDoctor'];
-  //   $caringNurse = $_GET['caringNurse'];
-  //   $diagnosis = $_GET['diagnosis'];
-  //   $sickRoom = $_GET['sickRoom'];
-  //   $dateOfCharge = $_GET['dateOfCharge'];
-  //   $fee = $_GET['fee'];
-
-  // }
-
-
-  // $result2 = mysqli_query($conn, "SELECT * FROM patients");
-  // if ($result)
-  //   echo "<script>alert('Thêm thành công!'); window.location = 'add.php' </script>";
-  // else
-  //   echo "<script>alert('Thêm thất bại'); window.location='add.php'</script>";
-  // }
   ?>
   <div class="container">
     <div class="left__container">
@@ -98,20 +114,20 @@
         <div class="name-group">
           <div class="form-group">
             <label for="fFame">First name</label>
-            <input name="firstName" type="text" class="form-control" id="fFame" placeholder="First Name" required />
+            <input name="firstName" type="text" class="form-control" id="fFame" placeholder="First Name" />
           </div>
           <div class="form-group">
             <label for="lName">Last name</label>
-            <input name="lastName" type="text" class="form-control" id="lName" placeholder="Last Name" required />
+            <input name="lastName" type="text" class="form-control" id="lName" placeholder="Last Name" />
           </div>
         </div>
         <div class="form-group">
           <label for="phoneNum">Phone number</label>
-          <input name="phone" type="text" class="form-control" id="phoneNum" placeholder="Phone Number" required />
+          <input name="phone" type="text" class="form-control" id="phoneNum" placeholder="Phone Number" />
         </div>
         <div class="form-group">
           <label for="dateOfBirth">Date of birth</label>
-          <input name="dOb" type="date" class="form-control" id="dateOfBirth" placeholder="" required />
+          <input name="dOb" type="date" class="form-control" id="dateOfBirth" placeholder="" />
         </div>
         <div class="form-group">
           <label for="gender">Gender</label>
@@ -122,7 +138,7 @@
         </div>
         <div class="form-group">
           <label for="address">Address</label>
-          <input name="address" type="text" class="form-control" id="address" placeholder="Address" required />
+          <input name="address" type="text" class="form-control" id="address" placeholder="Address" />
         </div>
         <div class="form-group">
           <label for="address">Type patient</label>
@@ -134,7 +150,16 @@
         <div class="out-patient-form show">
           <div class="form-group">
             <label for="examDate">Examination Date</label>
-            <input type="date" class="form-control" id="examDate">
+            <input type="date" class="form-control" name="examDate">
+          </div>
+          <div class="form-group">
+            <label for="doctor">Doctors</label>
+            <select name="doctor" class="js-example-basic-multiple">
+            <option value="" selected="true" disabled="disabled">--Doctors--</option>
+              <?php while ($row1 = mysqli_fetch_array($doctors)) : ?>
+                <option value="<?php echo $row1['employee_Id'] ?>"><?php echo $row1['fName']; echo "\x20"; echo $row1['lName'] ?></option>
+              <?php endwhile ?>
+            </select>
           </div>
           <div class="form-group">
             <label for="address">Diagnosis</label>
@@ -163,31 +188,30 @@
             <label for="dateAdmission">Date admission</label>
             <input name="dateAdmission" type="date" class="form-control" id="dateAdmission" placeholder="Date admission" />
           </div>
-          <!-- <div class="form-group">
-            <label for="address">Treatment</label>
-            <input name="address" type="text" class="form-control" id="treatment" placeholder="" />
-          </div> -->
-          <!-- <div class="form-group">
-            <label for="address">Treating doctors</label>
-            <input name="treatingDoctor" type="date" class="form-control" id="treatingDoctors" placeholder="Treating Doctor" />
-          </div> -->
-          <!-- <div class="form-group">
-            <label for="address">Caring nurse</label>
-            <select name="caringNurse" id="">
-              <?php while ($row = mysqli_fetch_row($nurseOptions)) : ?>
-              <option value="<?php echo $row['employee_Id'] ?>"><?php echo $row['fName'];
-                                                                echo $row['lName'] ?></option>
-              <?php endwhile ?>
-            </select>
-            <input name="address" type="text" class="form-control" id="caringNurse" placeholder="Caring Nurse" /> -->
-          <!-- </div> -->
           <div class="form-group">
             <label for="diagnosis">Diagnosis</label>
             <input name="diagnosis" type="text" class="form-control" id="diagnosis" placeholder="Diagnonsis" />
           </div>
           <div class="form-group">
             <label for="sickRoom">Sickroom</label>
-            <input name="sickRooom" type="text" class="form-control" id="sickroom" placeholder="Sick Room" />
+            <input name="sickRoom" type="text" class="form-control" id="sickroom" placeholder="Sick Room" />
+          </div>
+          <div class="form-group">
+            <label for="doctor">Doctors</label>
+            <select name="inDoctor[]" class="js-example-basic-multiple" multiple="multiple">
+              <?php while ($row = mysqli_fetch_array($inDoctors)) : ?>
+                <option value="<?php echo $row['employee_Id'] ?>"><?php echo $row['fName']; echo "\x20"; echo $row['lName'] ?></option>
+              <?php endwhile ?>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="inNurse">Nurse</label>
+            <select name="inNurse" class="js-example-basic-multiple">
+              <option value="" selected="true" disabled="disabled">--Nurse--</option>
+              <?php while ($nurseRow = mysqli_fetch_array($nurseOptions)) : ?>
+                <option value="<?php echo $nurseRow['employee_Id'];?>"><?php echo $nurseRow['fName'];echo "\x20"; echo $nurseRow['lName'] ?></option>
+              <?php endwhile ?>
+            </select>
           </div>
           <div class="form-group">
             <label for="dateOfCharge">Date of charge</label>
