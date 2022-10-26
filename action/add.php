@@ -19,20 +19,36 @@
   $inDoctors = mysqli_query($conn, "SELECT * FROM employee WHERE jobType='0'");
   $medications = mysqli_query($conn, "SELECT * FROM medication");
   if (isset($_POST['add'])) {
+    $getId = mysqli_query($conn, "SELECT * FROM id_value_patients ORDER BY ID DESC LIMIT 1");
+    if (mysqli_num_rows($getId) > 0) {
+      $iR = mysqli_fetch_assoc($getId);
+      $id = $iR['ID'];
+    } else {
+      $id = 0;
+    }
     $outPatient = (isset($_POST['outPatient']) ? $_POST['outPatient'] : '');
     $inPatient = (isset($_POST['inPatient']) ? $_POST['inPatient'] : '');
     $firstName = (isset($_POST['firstName']) ? $_POST['firstName'] : '');
     $lastName = (isset($_POST['lastName']) ? $_POST['lastName'] : '');
     $dOb = (isset($_POST['dOb']) ? $_POST['dOb'] : '');
-    $gender = $_POST['gender'];
+    $gender = (isset($_POST['gender']) ? $_POST['gender'] : '');
     $address = (isset($_POST['address']) ? $_POST['address'] : '');
     $phone = (isset($_POST['phone']) ? $_POST['phone'] : '');
-    $rowSQL = mysqli_query($conn, "SELECT MAX( patient_Id ) AS max FROM patients");
-    $row = mysqli_fetch_array($rowSQL);
-    $patient_Id = $row['max'] + 1;
-    $query = "INSERT INTO patients(patient_Id,fName,lName,dOb,gender,address,phone)
-    VALUES('$patient_Id','$firstName','$lastName','$dOb','$gender','$address','$phone')";
-    $result = mysqli_query($conn, $query);
+    if (!empty($outPatient)) {
+      $query = "INSERT INTO patients(ID,type,fName,lName,dOb,gender,address,phone)
+  VALUES('$id','OP','$firstName','$lastName','$dOb','$gender','$address','$phone')";
+      $result = mysqli_query($conn, $query);
+    } else {
+      $query = "INSERT INTO patients(ID,type,fName,lName,dOb,gender,address,phone)
+    VALUES('$id','IP','$firstName','$lastName','$dOb','$gender','$address','$phone')";
+      $result = mysqli_query($conn, $query);
+    }
+    $getCurrentId = mysqli_query($conn, "SELECT * FROM patients WHERE ID = '$id'");
+    if (mysqli_num_rows($getCurrentId) > 0) {
+      foreach ($getCurrentId as $rowp) {
+        $patient_Id = $rowp['UniqueCode'];
+      }
+    }
     if (!empty($outPatient)) {
       $examDate = (isset($_POST['examDate']) ? $_POST['examDate'] : '');
       $doctorId = (isset($_POST['doctor']) ? $_POST['doctor'] : '');
@@ -55,7 +71,7 @@
           }
         }
       }
-      $outPatientRun = mysqli_query($conn,"INSERT INTO outpatient(patient_Id) VALUES ('$patient_Id')");
+      $outPatientRun = mysqli_query($conn, "INSERT INTO outpatient(patient_Id) VALUES ('$patient_Id')");
     }
     if (!empty($inPatient)) {
       $dateAdmission = $_POST['dateAdmission'];
@@ -65,15 +81,15 @@
       $sickRoom = $_POST['sickRoom'];
       $dateOfCharge = $_POST['dateOfCharge'];
       $fee = $_POST['fee'];
-      foreach($treatingDoctor as $doc) {
-        $docById = mysqli_query($conn,"SELECT * FROM employee WHERE employee_Id = '$doc'");
+      foreach ($treatingDoctor as $doc) {
+        $docById = mysqli_query($conn, "SELECT * FROM employee WHERE employee_Id = '$doc'");
         $docRow = mysqli_fetch_array($docById);
         $fName = $docRow['fName'];
         $lName = $docRow['lName'];
         $docName = "{$fName} {$lName}";
         $inPatientQuery = "INSERT INTO inpatient(patient_Id,dateAdmission,treatingDoctors,caringNurse,sickRoom,diagnosis,dateDischarge,fee, employee_Id) 
         VALUES('$patient_Id','$dateAdmission','$docName','$nurseId','$sickRoom','$diagnosis','$dateOfCharge','$fee','$doc')";
-          $result2 = mysqli_query($conn, $inPatientQuery);
+        $result2 = mysqli_query($conn, $inPatientQuery);
       }
     }
   }
@@ -103,7 +119,7 @@
     </div>
     <div class="right__container">
       <div class="right__component">
-        <form action="../action/timkiem.php" method="GET" id="inputForm">
+        <form action="../index.php" method="GET" id="inputForm">
           <input name="patientId" class="input" placeholder="Enter patient id..." />
           <button class="submit_btn" type="submit" name="submit_btn">
             Tìm
@@ -155,9 +171,11 @@
           <div class="form-group">
             <label for="doctor">Doctors</label>
             <select name="doctor" class="js-example-basic-multiple">
-            <option value="" selected="true" disabled="disabled">--Doctors--</option>
+              <option value="" selected="true" disabled="disabled">--Doctors--</option>
               <?php while ($row1 = mysqli_fetch_array($doctors)) : ?>
-                <option value="<?php echo $row1['employee_Id'] ?>"><?php echo $row1['fName']; echo "\x20"; echo $row1['lName'] ?></option>
+                <option value="<?php echo $row1['employee_Id'] ?>"><?php echo $row1['fName'];
+                                                                    echo "\x20";
+                                                                    echo $row1['lName'] ?></option>
               <?php endwhile ?>
             </select>
           </div>
@@ -200,7 +218,9 @@
             <label for="doctor">Doctors</label>
             <select name="inDoctor[]" class="js-example-basic-multiple" multiple="multiple">
               <?php while ($row = mysqli_fetch_array($inDoctors)) : ?>
-                <option value="<?php echo $row['employee_Id'] ?>"><?php echo $row['fName']; echo "\x20"; echo $row['lName'] ?></option>
+                <option value="<?php echo $row['employee_Id'] ?>"><?php echo $row['fName'];
+                                                                  echo "\x20";
+                                                                  echo $row['lName'] ?></option>
               <?php endwhile ?>
             </select>
           </div>
@@ -209,7 +229,9 @@
             <select name="inNurse" class="js-example-basic-multiple">
               <option value="" selected="true" disabled="disabled">--Nurse--</option>
               <?php while ($nurseRow = mysqli_fetch_array($nurseOptions)) : ?>
-                <option value="<?php echo $nurseRow['employee_Id'];?>"><?php echo $nurseRow['fName'];echo "\x20"; echo $nurseRow['lName'] ?></option>
+                <option value="<?php echo $nurseRow['employee_Id']; ?>"><?php echo $nurseRow['fName'];
+                                                                        echo "\x20";
+                                                                        echo $nurseRow['lName'] ?></option>
               <?php endwhile ?>
             </select>
           </div>

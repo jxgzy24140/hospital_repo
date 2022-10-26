@@ -19,7 +19,7 @@
 
     } else {
       $result = mysqli_query($conn, "SELECT * FROM patients WHERE phone LIKE '%$search_value%' OR lName LIKE '%$search_value%'
-    OR fName LIKE '%$search_value%' OR lName LIKE '%$search_value%' OR patient_Id LIKE '%$search_value%'");
+    OR fName LIKE '%$search_value%' OR lName LIKE '%$search_value%' OR UniqueCode LIKE '%$search_value%'");
     }
   }
   ?>
@@ -65,14 +65,14 @@
         <tbody>
           <tr>
             <?php if(!empty($result)) { while ($temp = mysqli_fetch_array($result)) : ?>
-              <td><?php echo $temp['patient_Id']; ?></td>
+              <td><?php echo $temp['UniqueCode']; ?></td>
               <td><?php echo $temp['fName']; ?></td>
               <td><?php echo $temp['lName']; ?></td>
               <td><?php echo $temp['dOb']; ?></td>
               <td><?php if($temp['gender']==0) echo "Male"; else echo "Female"; ?></td>
               <td><?php echo $temp['address']; ?></td>
               <td><?php echo $temp['phone']; ?></td>
-              <td><a href="./pages/detail.php?id=<?php echo $temp['patient_Id'] ?>"><i class="fa-thin fa-circle-info"></i></a></td>
+              <td><a href="./pages/detail.php?id=<?php echo $temp['UniqueCode'] ?>"><i class="fa-thin fa-circle-info"></i></a></td>
           </tr>
         <?php endwhile; }?>
         </tbody>

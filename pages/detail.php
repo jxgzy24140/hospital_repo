@@ -15,8 +15,17 @@
   require_once '../connection/connection.php';
   if (isset($_GET['id'])) {
     $id = $_GET['id'];
-    $outPatient = mysqli_query($conn, "SELECT * FROM examination WHERE patient_Id = '$id'");
-    $inPatient = mysqli_query($conn, "SELECT * FROM inpatient WHERE patient_Id = '$id' ");
+    $patient = mysqli_query($conn, "SELECT * FROM patients WHERE UniqueCode = '$id'");
+    if (mysqli_num_rows($patient) > 0) {
+      foreach ($patient as $prow) {
+        $type = $prow['type'];
+      }
+    }
+  }
+  if (strcmp($type, "OP") == 0) {
+    $result = mysqli_query($conn, "SELECT * FROM examination WHERE patient_Id = '$id'");
+  } else {
+    $result = mysqli_query($conn, "SELECT * FROM treatment WHERE patient_Id = '$id'");
   }
   ?>
   <div class="container">
@@ -51,74 +60,61 @@
           </input>
         </form>
       </div>
-      <?php if (!empty($outPatient)) { ?>
-        <table class="table" style="width: 100%; text-align:center; margin-top: 10px">
-          <thead>
+      <table class="table" style="width: 100%; text-align:center; margin-top: 10px">
+        <thead>
+          <?php if (strcmp($type, "OP") == 0) { ?>
             <tr>
               <th scope="col">Patient ID</th>
-              <th scope="col">Doctor's name</th>
+              <th scope="col">Doctor's ID</th>
+              <th scope="col">Medication ID</th>
               <th scope="col">Exam Date</th>
-              <th scope="col"></th>
+              <th scope="col">Diagnosis</th>
               <th scope="col">Next Exam Date</th>
               <th scope="col">Fee</th>
             </tr>
-          </thead>
-          <tbody>
+          <?php } else { ?>
             <tr>
-              <?php while ($opr = mysqli_fetch_array($outPatient)) : ?>
-                <td><?php echo $opr['patient_Id']; ?></td>
-                <?php
-                $doc_Id = $opr['employee_Id'];
-                $doc_run = mysqli_query($conn, "SELECT * FROM employee WHERE employee_Id = $doc_Id");
-                while ($doc = mysqli_fetch_array($doc_run)) :
-                ?>
-                  <td>
-                    <?php echo $doc['fName'];
-                    echo "\x20";
-                    echo $doc['lName'] ?>
-                  </td>
-                <?php endwhile ?>
-                <td><?php echo $opr['examDate']; ?></td>
-                <td><?php echo $opr['diaganosis']; ?></td>
-                <td><?php echo $opr['nextExamDate']; ?></td>
-                <td><?php echo $opr['fee']; ?></td>
+              <th scope="col">Patient ID</th>
+              <th scope="col">Date Admission</th>
+              <th scope="col">TreatingDoctors</th>
+              <th scope="col">CaringNurse</th>
+              <th scope="col">Sick Room</th>
+              <th scope="col">Diagnosis</th>
+              <th scope="col">DateDischarge</th>
+              <th scope="col">Fee</th>
+              <th scope="col">Treatment detail</th>
             </tr>
-        <?php endwhile; ?>
-          </tbody>
-        </table>
-        <?php } ?>
-        <?php if (!empty($inPatient)) { ?>
-          <table class="table" style="width: 100%; text-align:center; margin-top: 10px">
-            <thead>
-              <tr>
-                <th scope="col">Doctor ID</th>
-                <th scope="col">Patient ID</th>
-                <th scope="col">Medication ID</th>
-                <th scope="col">Start Date</th>
-                <th scope="col">End Date</th>
-                <th scope="col">Result</th>
-                <th scope="col">Period</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <?php if (!empty($result)) {
-                  while ($ipr = mysqli_fetch_array($result)) : ?>
-                    <td><?php echo $ipr['employee_Id']; ?></td>
-                    <td><?php echo $ipr['patient_Id']; ?></td>
-                    <td><?php echo $ipr['treatingDotocs']; ?></td>
-                    <td><?php echo $ipr['caringNurse']; ?></td>
-                    <td><?php echo $ipr['']; ?></td>
-                    <td><?php echo $ipr['']; ?></td>
-                    <td><?php echo $ipr['']; ?></td>
-              </tr>
-          <?php endwhile;
-                } ?>
-            </tbody>
-          </table>
-        <?php } else { ?>
-          <h2>Không có bệnh nhân</h2>
-        <?php  } ?>
+          <?php } ?>
+        </thead>
+        <tbody>
+          <?php if (strcmp($type, "OP") == 0) { ?>
+            <tr>
+            <?php while($row = mysqli_fetch_array($result)) : ?>
+              <td><?php echo $row['patient_Id']; ?></td>
+              <td><?php echo $row['employee_Id']; ?></td>
+              <td><?php echo $row['medication_Id']; ?></td>
+              <td><?php echo $row['examDate']; ?></td>
+              <td><?php echo $row['diagnosis']; ?></td>
+              <td><?php echo $row['nextExamDate']; ?></td>
+              <td><?php echo $row['fee']; ?></td>
+            <?php endwhile; ?>
+            </tr>
+          <?php } else { ?>
+            <tr>
+            <?php while($row = mysqli_fetch_array($result)) : ?>
+              <td><?php echo $row['employee_Id']; ?></td>
+              <td><?php echo $row['dateAdmission']; ?></td>
+              <td><?php echo $row['treatingDoctors']; ?></td>
+              <td><?php echo $row['caringNurse']; ?></td>
+              <td><?php echo $row['sickRoom']; ?></td>
+              <td><?php echo $row['diagnosis']; ?></td>
+              <td><?php echo $row['dateDischarge']; ?></td>
+              <td><?php echo $row['fee']; ?></td>
+              <?php endwhile; ?>
+            </tr>
+          <?php } ?>
+        </tbody>
+      </table>
     </div>
   </div>
   <script src="index.js"></script>
