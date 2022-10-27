@@ -14,15 +14,17 @@
   <?php
   require_once '../connection/connection.php';
   if (isset($_GET['timkiem'])) {
-   $doctor_Id = $_GET['doctor_Id'];
-   $query = "SELECT * FROM inpatient WHERE employee_Id = '$doctor_Id'";
-   $result = mysqli_query($conn,$query);
+    $doctor_Id = $_GET['doctor_Id'];
+    $query = "SELECT * FROM inpatient WHERE employee_Id = '$doctor_Id'";
+    $result = mysqli_query($conn, $query);
   }
   ?>
   <div class="container">
     <div class="left__container">
       <div class="left__component">
-        <h1 class="left__title">Hospital Management</h1>
+        <div class="left__title">
+          <a href="../index.php">Hospital Management</a>
+        </div>
         <ul class="lc__options">
           <span>
             <li>
@@ -51,33 +53,38 @@
           </input>
         </form>
       </div>
-    <?php if(!empty($result)) { ?>
-      <table class="table" style="width: 100%; text-align:center; margin-top: 10px">
-        <thead>
-          <tr>
-            <th scope="col">Patient ID</th>
-            <th scope="col">Date Admission</th>
-            <th scope="col">Treating Doctors</th>
-            <th scope="col">Caring Nurse</th>
-            <th scope="col">SickRoom</th>
-            <th scope="col">Diagnosis</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <?php if(!empty($result)) { while ($temp = mysqli_fetch_array($result)) : ?>
-              <td><?php echo $temp['patient_Id']; ?></td>
-              <td><?php echo $temp['dateAdmission']; ?></td>
-              <td><?php echo $temp['treatingDoctors']; ?></td>
-              <td><?php echo $temp['caringNurse']; ?></td>
-              <td><?php echo $temp['sickRoom']; ?></td>
-              <td><?php echo $temp['diagnosis']; ?></td>
-              <td><a href=""><i class="fa-thin fa-circle-info"></i></a></td>
-          </tr>
-        <?php endwhile; } ?>
-        </tbody>
-      </table>
-     <?php } ?>
+      <?php if (!empty($result)) { ?>
+        <table class="table" style="width: 100%; text-align:center; margin-top: 10px">
+          <thead>
+            <tr>
+              <th scope="col">Patient ID</th>
+              <th scope="col">Date Admission</th>
+              <th scope="col">Treating Doctors</th>
+              <th scope="col">Caring Nurse</th>
+              <th scope="col">SickRoom</th>
+              <th scope="col">Diagnosis</th>
+              <th scope="col">Date Of Discharge</th>
+              <th scope="col">Fee</th>
+              <th scope="col">About Treatment</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <?php if (!empty($result)) {
+                while ($temp = mysqli_fetch_array($result)) : ?>
+                  <td><?php echo $temp['patient_Id']; ?></td>
+                  <td><?php echo $temp['dateAdmission']; ?></td>
+                  <td><?php echo $temp['treatingDoctors']; ?></td>
+                  <td><?php echo $temp['caringNurse']; ?></td>
+                  <td><?php echo $temp['sickRoom']; ?></td>
+                  <td><?php echo $temp['diagnosis']; ?></td>
+                  <td><a href=""><i class="fa-thin fa-circle-info"></i></a></td>
+            </tr>
+        <?php endwhile;
+              } ?>
+          </tbody>
+        </table>
+      <?php } ?>
     </div>
   </div>
   <script src="index.js"></script>

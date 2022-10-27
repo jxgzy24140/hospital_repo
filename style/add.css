@@ -21,6 +21,12 @@
   color: white;
   text-align: center;
   padding: 10px 0;
+  margin-top: 20px;
+}
+.left__container .left__title a {
+  color: white;
+  text-decoration: none;
+  font-size: larger;
 }
 .left__container .lc__options {
   margin-top: 100px;
@@ -79,6 +85,30 @@
 
 #patientInputForm {
   padding: 10px;
+  display: flex;
+  justify-content: space-around;
+}
+#patientInputForm .left-form-component {
+  width: 100%;
+}
+#patientInputForm .left-form-component .btn-primary {
+  width: 40%;
+  margin: 0 auto;
+  padding: 6px 20px;
+  background-color: #1e282e;
+  color: white;
+  border-radius: 4px;
+  display: inherit;
+  cursor: pointer;
+}
+#patientInputForm .left-form-component input {
+  width: 100%;
+}
+#patientInputForm .right-form-component {
+  width: 100%;
+}
+#patientInputForm .right-form-component input {
+  width: 100%;
 }
 #patientInputForm .name-group {
   display: flex;

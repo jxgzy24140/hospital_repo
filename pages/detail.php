@@ -25,17 +25,19 @@
   if (strcmp($type, "OP") == 0) {
     $result = mysqli_query($conn, "SELECT * FROM examination WHERE patient_Id = '$id'");
   } else {
-    $result = mysqli_query($conn, "SELECT * FROM treatment WHERE patient_Id = '$id'");
+    $result = mysqli_query($conn, "SELECT * FROM inpatient WHERE patient_Id = '$id'");
   }
   ?>
   <div class="container">
     <div class="left__container">
       <div class="left__component">
-        <h1 class="left__title">Hospital Management</h1>
+        <div class="left__title">
+          <a href="../index.php">Hospital Management</a>
+        </div>
         <ul class="lc__options">
           <span>
             <li>
-              <i class="fa-regular fa-address-book"></i><a href="./add.php">Add new patient</a>
+              <i class="fa-regular fa-address-book"></i><a href="../action/add.php">Add new patient</a>
             </li>
           </span>
           <span>
@@ -88,30 +90,44 @@
         </thead>
         <tbody>
           <?php if (strcmp($type, "OP") == 0) { ?>
-            <tr>
-            <?php while($row = mysqli_fetch_array($result)) : ?>
-              <td><?php echo $row['patient_Id']; ?></td>
-              <td><?php echo $row['employee_Id']; ?></td>
-              <td><?php echo $row['medication_Id']; ?></td>
-              <td><?php echo $row['examDate']; ?></td>
-              <td><?php echo $row['diagnosis']; ?></td>
-              <td><?php echo $row['nextExamDate']; ?></td>
-              <td><?php echo $row['fee']; ?></td>
+            <?php while ($row = mysqli_fetch_array($result)) : ?>
+              <tr>
+                <td><?php echo $row['patient_Id']; ?></td>
+                <td><?php echo $row['employee_Id']; ?></td>
+                <td><?php echo $row['medication_Id']; ?></td>
+                <td><?php echo $row['examDate']; ?></td>
+                <td><?php echo $row['diagnosis']; ?></td>
+                <td><?php echo $row['nextExamDate']; ?></td>
+                <td><?php echo $row['fee']; ?></td>
+              </tr>
             <?php endwhile; ?>
-            </tr>
           <?php } else { ?>
-            <tr>
-            <?php while($row = mysqli_fetch_array($result)) : ?>
-              <td><?php echo $row['employee_Id']; ?></td>
-              <td><?php echo $row['dateAdmission']; ?></td>
-              <td><?php echo $row['treatingDoctors']; ?></td>
-              <td><?php echo $row['caringNurse']; ?></td>
-              <td><?php echo $row['sickRoom']; ?></td>
-              <td><?php echo $row['diagnosis']; ?></td>
-              <td><?php echo $row['dateDischarge']; ?></td>
-              <td><?php echo $row['fee']; ?></td>
-              <?php endwhile; ?>
-            </tr>
+            <?php while ($row = mysqli_fetch_array($result)) : ?>
+              <tr>
+                <td><?php echo $row['patient_Id']; ?></td>
+                <td><?php echo $row['dateAdmission']; ?></td>
+                <td><?php echo $row['treatingDoctors']; ?></td>
+                <td>
+                  <?php
+                  $nurse_Id = $row['caringNurse'];
+                  $nurse_run = mysqli_query($conn, "SELECT * FROM employee WHERE employee_Id = '$nurse_Id'");
+                  while ($nrow = mysqli_fetch_array($nurse_run)) {
+                    echo $nrow['fName'];
+                    echo "\x20";
+                    echo $nrow['lName'];
+                  }
+                  ?>
+                </td>
+                <td><?php echo $row['sickRoom']; ?></td>
+                <td><?php echo $row['diagnosis']; ?></td>
+                <td><?php echo $row['dateDischarge']; ?></td>
+                <td><?php echo $row['fee']; ?></td>
+                <td><a href="./treatmentDetail.php?id=<?php echo $row['patient_Id']; ?>">
+                    <i class="fa-light fa-circle-info"></i>
+                  </a>
+                </td>
+              </tr>
+            <?php endwhile; ?>
           <?php } ?>
         </tbody>
       </table>

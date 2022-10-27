@@ -97,7 +97,9 @@
   <div class="container">
     <div class="left__container">
       <div class="left__component">
-        <h1 class="left__title">Hospital Management</h1>
+        <div class="left__title">
+          <a href="../index.php">Hospital Management</a>
+        </div>
         <ul class="lc__options">
           <span>
             <li>
@@ -127,7 +129,7 @@
         </form>
       </div>
       <form method="POST" action="" id="patientInputForm" enctype="multipart/form-data">
-        <div class="name-group">
+        <div class="left-form-component">
           <div class="form-group">
             <label for="fFame">First name</label>
             <input name="firstName" type="text" class="form-control" id="fFame" placeholder="First Name" />
@@ -136,117 +138,120 @@
             <label for="lName">Last name</label>
             <input name="lastName" type="text" class="form-control" id="lName" placeholder="Last Name" />
           </div>
-        </div>
-        <div class="form-group">
-          <label for="phoneNum">Phone number</label>
-          <input name="phone" type="text" class="form-control" id="phoneNum" placeholder="Phone Number" />
-        </div>
-        <div class="form-group">
-          <label for="dateOfBirth">Date of birth</label>
-          <input name="dOb" type="date" class="form-control" id="dateOfBirth" placeholder="" />
-        </div>
-        <div class="form-group">
-          <label for="gender">Gender</label>
-          <select name="gender">
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="address">Address</label>
-          <input name="address" type="text" class="form-control" id="address" placeholder="Address" />
-        </div>
-        <div class="form-group">
-          <label for="address">Type patient</label>
-          OutPatient
-          <input name="outPatient" onchange="selectFormInput(0)" type="radio" class="typePatient" value="OP" checked>
-          Inpatient
-          <input name="inPatient" onchange="selectFormInput(1)" type="radio" class="typePatient" value="IP">
-        </div>
-        <div class="out-patient-form show">
           <div class="form-group">
-            <label for="examDate">Examination Date</label>
-            <input type="date" class="form-control" name="examDate">
+            <label for="phoneNum">Phone number</label>
+            <input name="phone" type="text" class="form-control" id="phoneNum" placeholder="Phone Number" />
           </div>
           <div class="form-group">
-            <label for="doctor">Doctors</label>
-            <select name="doctor" class="js-example-basic-multiple">
-              <option value="" selected="true" disabled="disabled">--Doctors--</option>
-              <?php while ($row1 = mysqli_fetch_array($doctors)) : ?>
-                <option value="<?php echo $row1['employee_Id'] ?>"><?php echo $row1['fName'];
-                                                                    echo "\x20";
-                                                                    echo $row1['lName'] ?></option>
-              <?php endwhile ?>
+            <label for="dateOfBirth">Date of birth</label>
+            <input name="dOb" type="date" class="form-control" id="dateOfBirth" placeholder="" />
+          </div>
+          <div class="form-group">
+            <label for="gender">Gender</label>
+            <select name="gender">
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
             </select>
           </div>
           <div class="form-group">
-            <label for="address">Diagnosis</label>
-            <input name="diagnosis" type="text" class="form-control" id="diagnosis" placeholder="Diagnosis" />
+            <label for="address">Address</label>
+            <input name="address" type="text" class="form-control" id="address" placeholder="Address" />
           </div>
           <div class="form-group">
-            <label for="address">The next examination date</label>
-            <input name="nextExamDate" type="date" class="form-control" id="nextExamDate" placeholder="The Next Exam Date" />
+            <label for="outPatient">Type patient</label>
+            OutPatient
+            <input name="outPatient" onchange="selectFormInput(0)" type="radio" class="typePatient" value="OP" checked>
+            Inpatient
+            <input name="inPatient" onchange="selectFormInput(1)" type="radio" class="typePatient" value="IP">
           </div>
-          <div class="form-group">
-            <label for="medications">Medications</label>
-            <select name="medications[]" class="form-group js-example-basic-multiple" multiple="multiple">
-              <?php while ($row = mysqli_fetch_array($medications)) : { ?>
-                  <option value="<?php echo $row['medication_Id'] ?>"><?php echo $row['nameMedication'] ?></option>
-              <?php }
-              endwhile ?>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="address">Fee</label>
-            <input name="fee" type="text" class="form-control" id="fee" placeholder="Fee" />
-          </div>
-        </div>
-        <div class="in-patient-form hide">
-          <div class="form-group">
-            <label for="dateAdmission">Date admission</label>
-            <input name="dateAdmission" type="date" class="form-control" id="dateAdmission" placeholder="Date admission" />
-          </div>
-          <div class="form-group">
-            <label for="diagnosis">Diagnosis</label>
-            <input name="diagnosis" type="text" class="form-control" id="diagnosis" placeholder="Diagnonsis" />
-          </div>
-          <div class="form-group">
-            <label for="sickRoom">Sickroom</label>
-            <input name="sickRoom" type="text" class="form-control" id="sickroom" placeholder="Sick Room" />
-          </div>
-          <div class="form-group">
-            <label for="doctor">Doctors</label>
-            <select name="inDoctor[]" class="js-example-basic-multiple" multiple="multiple">
-              <?php while ($row = mysqli_fetch_array($inDoctors)) : ?>
-                <option value="<?php echo $row['employee_Id'] ?>"><?php echo $row['fName'];
-                                                                  echo "\x20";
-                                                                  echo $row['lName'] ?></option>
-              <?php endwhile ?>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="inNurse">Nurse</label>
-            <select name="inNurse" class="js-example-basic-multiple">
-              <option value="" selected="true" disabled="disabled">--Nurse--</option>
-              <?php while ($nurseRow = mysqli_fetch_array($nurseOptions)) : ?>
-                <option value="<?php echo $nurseRow['employee_Id']; ?>"><?php echo $nurseRow['fName'];
-                                                                        echo "\x20";
-                                                                        echo $nurseRow['lName'] ?></option>
-              <?php endwhile ?>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="dateOfCharge">Date of charge</label>
-            <input name="dateOfCharge" type="date" class="form-control" id="dateOfCharge" placeholder="" />
-          </div>
-          <div class="form-group">
-            <label for="fee">Fee</label>
-            <input name="fee" type="text" class="form-control" id="fee" placeholder="Fee" />
-          </div>
-        </div>
-        <button name="add" type="submit" class="btn btn-primary">Submit</button>
-      </form>
+          <button name="add" type="submit" class="btn btn-primary">Submit</button>
 
+        </div>
+        <div class="right-form-component">
+
+          <div class="out-patient-form show">
+            <div class="form-group">
+              <label for="examDate">Examination Date</label>
+              <input type="date" class="form-control" name="examDate">
+            </div>
+            <div class="form-group">
+              <label for="doctor">Doctors</label>
+              <select name="doctor" class="js-example-basic-multiple">
+                <option value="" selected="true" disabled="disabled">--Doctors--</option>
+                <?php while ($row1 = mysqli_fetch_array($doctors)) : ?>
+                  <option value="<?php echo $row1['employee_Id'] ?>"><?php echo $row1['fName'];
+                                                                      echo "\x20";
+                                                                      echo $row1['lName'] ?></option>
+                <?php endwhile ?>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="address">Diagnosis</label>
+              <input name="diagnosis" type="text" class="form-control" id="diagnosis" placeholder="Diagnosis" />
+            </div>
+            <div class="form-group">
+              <label for="address">The next examination date</label>
+              <input name="nextExamDate" type="date" class="form-control" id="nextExamDate" placeholder="The Next Exam Date" />
+            </div>
+            <div class="form-group">
+              <label for="medications">Medications</label>
+              <select name="medications[]" class="form-group js-example-basic-multiple" multiple="multiple">
+                <?php while ($row = mysqli_fetch_array($medications)) : { ?>
+                    <option value="<?php echo $row['medication_Id'] ?>"><?php echo $row['nameMedication'] ?></option>
+                <?php }
+                endwhile ?>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="address">Fee</label>
+              <input name="fee" type="text" class="form-control" id="fee" placeholder="Fee" />
+            </div>
+          </div>
+          <div class="in-patient-form hide">
+            <div class="form-group">
+              <label for="dateAdmission">Date admission</label>
+              <input name="dateAdmission" type="date" class="form-control" id="dateAdmission" placeholder="Date admission" />
+            </div>
+            <div class="form-group">
+              <label for="diagnosis">Diagnosis</label>
+              <input name="diagnosis" type="text" class="form-control" id="diagnosis" placeholder="Diagnonsis" />
+            </div>
+            <div class="form-group">
+              <label for="sickRoom">Sickroom</label>
+              <input name="sickRoom" type="text" class="form-control" id="sickroom" placeholder="Sick Room" />
+            </div>
+            <div class="form-group">
+              <label for="doctor">Doctors</label>
+              <select name="inDoctor[]" class="js-example-basic-multiple" multiple="multiple">
+                <?php while ($row = mysqli_fetch_array($inDoctors)) : ?>
+                  <option value="<?php echo $row['employee_Id'] ?>"><?php echo $row['fName'];
+                                                                    echo "\x20";
+                                                                    echo $row['lName'] ?></option>
+                <?php endwhile ?>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="inNurse">Nurse</label>
+              <select name="inNurse" class="js-example-basic-multiple">
+                <option value="" selected="true" disabled="disabled">--Nurse--</option>
+                <?php while ($nurseRow = mysqli_fetch_array($nurseOptions)) : ?>
+                  <option value="<?php echo $nurseRow['employee_Id']; ?>"><?php echo $nurseRow['fName'];
+                                                                          echo "\x20";
+                                                                          echo $nurseRow['lName'] ?></option>
+                <?php endwhile ?>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="dateOfCharge">Date of charge</label>
+              <input name="dateOfCharge" type="date" class="form-control" id="dateOfCharge" placeholder="" />
+            </div>
+            <div class="form-group">
+              <label for="fee">Fee</label>
+              <input name="fee" type="text" class="form-control" id="fee" placeholder="Fee" />
+            </div>
+          </div>
+        </div>
+      </form>
     </div>
   </div>
   <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
