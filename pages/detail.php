@@ -21,11 +21,12 @@
         $type = $prow['type'];
       }
     }
+    $docs = mysqli_query($conn, "SELECT treatingDoctors FROM inpatient WHERE patient_Id = '$id'");
   }
   if (strcmp($type, "OP") == 0) {
-    $result = mysqli_query($conn, "SELECT * FROM examination WHERE patient_Id = '$id'");
+    $result = mysqli_query($conn, "SELECT * FROM examination WHERE patient_Id = '$id' LIMIT 1");
   } else {
-    $result = mysqli_query($conn, "SELECT * FROM inpatient WHERE patient_Id = '$id'");
+    $result = mysqli_query($conn, "SELECT * FROM inpatient WHERE patient_Id = '$id' LIMIT 1");
   }
   ?>
   <div class="container">
@@ -102,11 +103,21 @@
               </tr>
             <?php endwhile; ?>
           <?php } else { ?>
-            <?php while ($row = mysqli_fetch_array($result)) : ?>
-              <tr>
-                <td><?php echo $row['patient_Id']; ?></td>
+            <tr>
+              <?php while ($row = mysqli_fetch_array($result)) : ?>
+                <td><?php echo $row['patient_Id'] ?></td>
                 <td><?php echo $row['dateAdmission']; ?></td>
-                <td><?php echo $row['treatingDoctors']; ?></td>
+                <td>
+                  <ul>
+                    <?php
+                    // echo $row['patient_Id'];
+                    while ($drow = mysqli_fetch_array($docs)) { ?>
+                      <li style="list-style-type: none">
+                        <?php echo $drow['treatingDoctors'] ?>
+                      </li>
+                    <?php } ?>
+                  </ul>
+                </td>
                 <td>
                   <?php
                   $nurse_Id = $row['caringNurse'];
@@ -126,8 +137,8 @@
                     <i class="fa-light fa-circle-info"></i>
                   </a>
                 </td>
-              </tr>
-            <?php endwhile; ?>
+              <?php endwhile; ?>
+            </tr>
           <?php } ?>
         </tbody>
       </table>

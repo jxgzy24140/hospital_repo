@@ -23,8 +23,9 @@
     //     }
     //   }
     $id = (isset($_GET['id']) ? $_GET['id'] : '');
-    $result = mysqli_query($conn, "SELECT * FROM treatment WHERE patient_Id = '$id'");
-    $meds_run = mysqli_query($conn, "SELECT medication_Id FROM treatment WHERE patient_Id = '$id'");
+    $result = mysqli_query($conn, "SELECT * FROM treatment WHERE patient_Id = '$id' LIMIT 1");
+    $docs = mysqli_query($conn, "SELECT DISTINCT employee_Id FROM treatment WHERE patient_Id = '$id'");
+    $meds = mysqli_query($conn, "SELECT DISTINCT medication_Id FROM treatment WHERE patient_Id = '$id'");
     ?>
     <div class="container">
         <div class="left__container">
@@ -70,13 +71,33 @@
                         <?php if (!empty($result)) {
                             while ($temp = mysqli_fetch_array($result)) : ?>
                                 <tr>
-                                    <td><?php echo $temp['employee_Id']; ?></td>
+                                    <td>
+                                        <ul>
+                                            <?php
+                                            // echo $row['patient_Id'];
+                                            while ($drow = mysqli_fetch_array($docs)) { ?>
+                                                <li style="list-style-type: none">
+                                                    <?php echo $drow['employee_Id'] ?>
+                                                </li>
+                                            <?php } ?>
+                                        </ul>
+                                    </td>
                                     <td><?php echo $temp['patient_Id']; ?></td>
-                                    <td><?php echo $temp['medication_Id']; ?></td>
+                                    <td>
+                                        <ul>
+                                            <?php
+                                            // echo $row['patient_Id'];
+                                            while ($mrow = mysqli_fetch_array($meds)) { ?>
+                                                <li style="list-style-type: none">
+                                                    <?php echo $mrow['medication_Id'] ?>
+                                                </li>
+                                            <?php } ?>
+                                        </ul>
+                                    </td>
                                     <td><?php echo $temp['startDate']; ?></td>
                                     <td><?php echo $temp['endDate']; ?></td>
                                     <td><?php echo $temp['result']; ?></td>
-                                    <td><?php echo $temp['treatmentPeriod']; ?></td>
+                                    <td><?php echo $temp['treatmentPeriod']; echo "\x20"; echo ($temp['treatmentPeriod'] > 1) ? "days" : "day"  ?></td>
                                 </tr>
                         <?php endwhile;
                         } ?>
