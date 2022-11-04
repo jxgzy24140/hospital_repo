@@ -14,8 +14,12 @@
   <?php
   require_once '../connection/connection.php';
   if (isset($_GET['timkiem'])) {
-    $doctor_Id = $_GET['doctor_Id'];
-    $query = "SELECT * FROM inpatient WHERE employee_Id = '$doctor_Id'";
+    $id = (isset($_GET['id']) ? $_GET['id'] : '');
+    if (!empty($id)) {
+      $query = "SELECT * FROM patients WHERE UniqueCode NOT IN (SELECT patient_Id FROM inpatient WHERE inpatient.status = 'relapse') AND patients.type = 'IP' AND patients.UniqueCode = '$id'";
+    } else {
+      $query = "SELECT * FROM patients WHERE UniqueCode NOT IN (SELECT patient_Id FROM inpatient WHERE inpatient.status = 'relapse') AND patients.type = 'IP'";
+    }
     $result = mysqli_query($conn, $query);
   }
   ?>
@@ -33,7 +37,7 @@
           </span>
           <span>
             <li>
-              <i class="fa-solid fa-list"></i><a href="">List all patient are treated by a doctor</a>
+              <i class="fa-solid fa-list"></i><a href="./listPatients.php">List all patient are treated by a doctor</a>
             </li>
           </span>
           <span>
@@ -46,43 +50,47 @@
     <div class="right__container">
       <div class="right__component">
         <form action="" method="GET" id="inputForm">
-          <input name="doctor_Id" class="input" placeholder="Enter doctor id..." />
+          <input name="id" class="input" placeholder="Enter patient id..." />
           <input class="submit_btn" type="submit" name="timkiem" value="Search">
           </input>
         </form>
       </div>
-      <?php if (!empty($result)) { ?>
+      <?php if (isset($result) && mysqli_num_rows($result) != 0) { ?>
         <table class="table" style="width: 100%; text-align:center; margin-top: 10px">
           <thead>
             <tr>
               <th scope="col">Patient ID</th>
-              <th scope="col">Date Admission</th>
-              <th scope="col">Caring Nurse</th>
-              <th scope="col">SickRoom</th>
-              <th scope="col">Diagnosis</th>
-              <th scope="col">Date Of Discharge</th>
-              <th scope="col">Fee</th>
-              <th scope="col">About Treatment</th>
+              <th scope="col">FirstName</th>
+              <th scope="col">LastName</th>
+              <th scope="col">dOb</th>
+              <th scope="col">Gender</th>
+              <th scope="col">Address</th>
+              <th scope="col">Phone</th>
+              <th scope="col">Detail</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <?php if (!empty($result)) {
                 while ($temp = mysqli_fetch_array($result)) : ?>
-                  <td><?php echo $temp['patient_Id']; ?></td>
-                  <td><?php echo $temp['dateAdmission']; ?></td>
-                  <td><?php echo $temp['caringNurse']; ?></td>
-                  <td><?php echo $temp['sickRoom']; ?></td>
-                  <td><?php echo $temp['diagnosis']; ?></td>
-                  <td><?php echo $temp['dateDischarge']; ?></td>
-                  <td><?php echo $temp['fee']; ?></td>
-                  <td><a href="./treatmentDetail.php?id=<?php echo $temp['patient_Id'] ?>"><i class="fa-thin fa-circle-info"></i></a></td>
+                  <td><?php echo $temp['UniqueCode']; ?></td>
+                  <td><?php echo $temp['fName']; ?></td>
+                  <td><?php echo $temp['lName']; ?></td>
+                  <td><?php echo $temp['dOb']; ?></td>
+                  <td><?php echo $temp['gender']; ?></td>
+                  <td><?php echo $temp['address']; ?></td>
+                  <td><?php echo $temp['phone']; ?></td>
+                  <td><a href="./treatmentDetail.php?id=<?php echo $temp['UniqueCode'] ?>"><i class="fa-thin fa-circle-info"></i></a></td>
             </tr>
         <?php endwhile;
               } ?>
           </tbody>
         </table>
+      <?php }
+      if (isset($result) && mysqli_num_rows($result) == 0) { ?>
+        <h2>Không tìm thấy...</h2>
       <?php } ?>
+
     </div>
   </div>
   <script src="index.js"></script>

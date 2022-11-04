@@ -108,7 +108,7 @@
           </span>
           <span>
             <li>
-              <i class="fa-solid fa-list"></i><a href="">List all patient are treated by a doctor</a>
+              <i class="fa-solid fa-list"></i><a href="../pages/listPatients.php">List all patient are treated by a doctor</a>
             </li>
           </span>
           <span>

@@ -28,6 +28,9 @@
   } else {
     $result = mysqli_query($conn, "SELECT * FROM inpatient WHERE patient_Id = '$id' LIMIT 1");
   }
+  if (isset($_POST['recovery'])) {
+    $updateStatus = mysqli_query($conn, "UPDATE inpatient SET status = 'recovered' WHERE patient_Id = '$id'");
+  }
   ?>
   <div class="container">
     <div class="left__container">
@@ -43,13 +46,11 @@
           </span>
           <span>
             <li>
-              <i class="fa-solid fa-list"></i><a href="">List all patient are treated by a doctor</a>
+              <i class="fa-solid fa-list"></i><a href="./listPatients.php">List all patient are treated by a doctor</a>
             </li>
           </span>
           <span>
-            <li>
-              <i class="fa-solid fa-plus"></i><a href="">Make a report</a>
-            </li>
+            <li><i class="fa-solid fa-plus"></i><a href="./recoveredPage.php">List all recovered patient</a></li>
           </span>
         </ul>
       </div>
@@ -85,7 +86,9 @@
               <th scope="col">Diagnosis</th>
               <th scope="col">DateDischarge</th>
               <th scope="col">Fee</th>
+              <th scope="col">Status</th>
               <th scope="col">Treatment detail</th>
+              <th scope="col">Recovered</th>
             </tr>
           <?php } ?>
         </thead>
@@ -133,9 +136,15 @@
                 <td><?php echo $row['diagnosis']; ?></td>
                 <td><?php echo $row['dateDischarge']; ?></td>
                 <td><?php echo $row['fee']; ?></td>
+                <td><?php echo $row['status']; ?></td>
                 <td><a href="./treatmentDetail.php?id=<?php echo $row['patient_Id']; ?>">
                     <i class="fa-light fa-circle-info"></i>
                   </a>
+                </td>
+                <td>
+                  <form action="" method="POST">
+                    <input type="submit" value="Confirm" name="recovery" />
+                  </form>
                 </td>
               <?php endwhile; ?>
             </tr>

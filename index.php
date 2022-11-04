@@ -17,8 +17,7 @@
     $search_value = $_GET['value'];
     if ($search_value == '') {
     } else {
-      $result = mysqli_query($conn, "SELECT * FROM patients WHERE phone LIKE '%$search_value%' OR lName LIKE '%$search_value%'
-    OR fName LIKE '%$search_value%' OR lName LIKE '%$search_value%' OR UniqueCode LIKE '%$search_value%'");
+      $result = mysqli_query($conn, "SELECT * FROM patients WHERE UniqueCode NOT IN (SELECT patient_Id FROM inpatient WHERE inpatient.status = 'recovered') AND patients.UniqueCode = '$search_value' OR patients.phone = '$search_value'");
     }
   }
   ?>
@@ -33,10 +32,10 @@
             <li><i class="fa-regular fa-address-book"></i><a href="./action/add.php">Add new patient</a></li>
           </span>
           <span>
-            <li><i class="fa-solid fa-list"></i><a href="./pages/patients.php">List all patient are treated by a doctor</a></li>
+            <li><i class="fa-solid fa-list"></i><a href="./pages/listPatients.php">List all patient are treated by a doctor</a></li>
           </span>
           <span>
-            <li><i class="fa-solid fa-plus"></i><a href="">Make a report</a></li>
+            <li><i class="fa-solid fa-plus"></i><a href="./pages/recoveredPage.php">List all recovered patient</a></li>
           </span>
         </ul>
       </div>

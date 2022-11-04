@@ -14,6 +14,8 @@
 <body>
   <?php
   require_once '../connection/connection.php';
+  date_default_timezone_set('Asia/Ho_Chi_Minh');
+  $curtime = date("h:i:sa");
   $medication = mysqli_query($conn, "SELECT * FROM medication");
   $doctors = mysqli_query($conn, "SELECT * FROM employee WHERE jobType='0'");
   $nurses = mysqli_query($conn, "SELECT * FROM employee WHERE jobType='1'");
@@ -29,9 +31,9 @@
     while ($row = mysqli_fetch_array($getDocs)) {
       $doc = $row['employee_Id'];
       foreach ($meds as $med) {
-        $query = "INSERT INTO treatment(employee_Id,patient_Id,medication_Id,startDate,endDate,result,treatmentPeriod) 
-        VALUES('$doc','$patient_Id','$med','$startDate','$endDate','$res','$treatmentPeriod')";
-        $notcheck = mysqli_query($conn, "SET FOREIGN_KEY_CHECKS = 0");
+        $query = "INSERT INTO treatment(employee_Id,patient_Id,medication_Id,startDate,endDate,result,treatmentPeriod, time) 
+        VALUES('$doc','$patient_Id','$med','$startDate','$endDate','$res','$treatmentPeriod', '$curtime')";
+        // $notcheck = mysqli_query($conn, "SET FOREIGN_KEY_CHECKS = 0");
         $result = mysqli_query($conn, $query);
       }
     }
@@ -52,13 +54,11 @@
           </span>
           <span>
             <li>
-              <i class="fa-solid fa-list"></i><a href="">List all patient are treated by a doctor</a>
+              <i class="fa-solid fa-list"></i><a href="./listPatients.php">List all patient are treated by a doctor</a>
             </li>
           </span>
           <span>
-            <li>
-              <i class="fa-solid fa-plus"></i><a href="">Make a report</a>
-            </li>
+            <li><i class="fa-solid fa-plus"></i><a href="./recoveredPage.php">List all recovered patient</a></li>
           </span>
         </ul>
       </div>
