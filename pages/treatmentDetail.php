@@ -26,6 +26,7 @@
     $numofrows = mysqli_query($conn, "SELECT DISTINCT time FROM treatment;");
     $result = mysqli_query($conn, "SELECT * FROM treatment WHERE patient_Id = '$id'  LIMIT 1");
     $successPatient = mysqli_query($conn, "SELECT * FROM inpatient WHERE status = 'relapse' AND patient_Id = '$id'");
+    $recovered_patient = mysqli_query($conn, "SELECT * FROM inpatient WHERE patient_Id = '$id' AND status = 'recovered'");
     //$docs = mysqli_query($conn, "SELECT DISTINCT employee_Id FROM treatment WHERE patient_Id = '$id'");
     //$meds = mysqli_query($conn, "SELECT DISTINCT medication_Id FROM treatment WHERE patient_Id = '$id'");
     ?>
@@ -152,19 +153,18 @@
                     </tbody>
                 </table>
                 <div class="" style="text-align: center; margin-top: 10px">
-                    <a href="./treatment.php?id=<?php echo $id ?>">Add more treatment</a>
+                    <!-- <a href="./treatment.php?id=<?php echo $id ?>">Add more treatment</a> -->
                 </div>
             <?php } else { ?>
                 <?php if (isset($successPatient) && mysqli_num_rows($successPatient) == 0) { ?>
                     <h2 style="text-align: center">Not treatment for patient <?php echo $id ?></h2>
-                <?php } else {
-
-                ?>
+                <?php } else { ?>
+                <?php if(mysqli_num_rows($recovered_patient) != 0) { ?>
                     <h2 style="text-align: center">Not treatment for patient <?php echo $id ?></h2>
                     <div class="add-treatment" style="text-align: center; margin-top: 5px">
                         <a href="./treatment.php?id=<?php echo $id ?>">Add more treatment</a>
                     </div>
-                <?php } ?>
+                <?php } } ?>
             <?php } ?>
 
         </div>

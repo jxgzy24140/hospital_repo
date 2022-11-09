@@ -13,8 +13,6 @@
 .left__container {
   flex-grow: 1;
   background-color: #1e282e;
-  margin: 10px;
-  border-radius: 5px;
 }
 .left__container .left__title {
   color: white;
@@ -56,8 +54,6 @@
 .right__container {
   flex-grow: 8;
   background-color: #ebeef5;
-  margin: 10px;
-  border-radius: 5px;
 }
 .right__container .right__component {
   text-align: center;
